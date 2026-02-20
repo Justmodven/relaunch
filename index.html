@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>RE:LAUNCH — Modven Strategic Resurrection Map</title>
+
+<!-- OG Meta Tags -->
+<meta property="og:title" content="RE:LAUNCH — Strategic Resurrection Map">
+<meta property="og:description" content="112 failed startups mapped to 45 corporate partners. $100B+ in lost capital, 29 AI revival candidates, 14 sectors. Every connection is a deal.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://relaunch.modven.co">
+<meta property="og:image" content="https://relaunch.modven.co/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="Modven">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RE:LAUNCH — Strategic Resurrection Map">
+<meta name="twitter:description" content="112 failed startups mapped to 45 corporate partners. $100B+ in lost capital, 29 AI revival candidates. Every connection is a deal.">
+<meta name="twitter:image" content="https://relaunch.modven.co/og-image.png">
+
+<!-- Slack unfurl -->
+<meta name="description" content="Modven's Re:Launch thesis: 112 failed startups mapped to their natural corporate partners. AI-powered rebuilds with the right partner at the table from day one.">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg-primary: #0a0b0f;
+    --bg-secondary: #12141c;
+    --bg-card: #1a1d2e;
+    --text-primary: #e8eaf0;
+    --text-secondary: #8b8fa3;
+    --text-muted: #555770;
+    --accent-blue: #4f7df5;
+    --accent-purple: #8b5cf6;
+    --accent-teal: #14b8a6;
+    --accent-pink: #ec4899;
+    --accent-orange: #f59e0b;
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+    --border: rgba(255,255,255,0.06);
+    --glow-blue: rgba(79, 125, 245, 0.3);
+    --glow-purple: rgba(139, 92, 246, 0.3);
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ─── MODVEN HEADER ─── */
+  .modven-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,11,15,0.92); backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  .modven-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .modven-logomark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 14px; color: white;
+    letter-spacing: -0.5px;
+  }
+  .modven-wordmark {
+    font-size: 16px; font-weight: 700; color: var(--text-primary);
+    letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .modven-nav {
+    display: flex; align-items: center; gap: 20px;
+  }
+  .modven-nav a {
+    font-size: 12px; color: var(--text-secondary); text-decoration: none;
+    font-weight: 500; letter-spacing: 0.5px; transition: color 0.2s;
+  }
+  .modven-nav a:hover { color: var(--text-primary); }
+  .modven-nav-cta {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid rgba(79,125,245,0.3);
+    background: rgba(79,125,245,0.08); color: var(--accent-blue) !important;
+    font-weight: 600 !important; transition: all 0.2s;
+  }
+  .modven-nav-cta:hover {
+    background: rgba(79,125,245,0.15); border-color: rgba(79,125,245,0.5);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    padding: 48px 32px 32px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(79,125,245,0.08) 0%, rgba(139,92,246,0.04) 40%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    background: rgba(79,125,245,0.1); border: 1px solid rgba(79,125,245,0.2);
+    font-size: 11px; font-weight: 600; color: var(--accent-blue);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-blue); animation: pulse-dot 2s infinite; }
+  @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .hero h1 {
+    font-size: 48px; font-weight: 900; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px;
+    background: linear-gradient(135deg, #e8eaf0 0%, #8b5cf6 50%, #4f7df5 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p { font-size: 16px; color: var(--text-secondary); max-width: 700px; margin: 0 auto 28px; line-height: 1.6; }
+
+  /* ─── STATS BAR ─── */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 32px; padding: 20px 0; margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .stat { text-align: center; min-width: 80px; }
+  .stat-value {
+    font-size: 28px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  /* ─── DOWNLOAD BAR ─── */
+  .download-bar {
+    display: flex; justify-content: center; gap: 12px; padding: 0 32px 20px; flex-wrap: wrap;
+  }
+  .download-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 20px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--text-secondary); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; text-decoration: none;
+    font-family: 'Inter', sans-serif;
+  }
+  .download-btn:hover {
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+  }
+  .download-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .download-btn .file-size { color: var(--text-muted); font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ─── FILTERS ─── */
+  .filter-bar {
+    display: flex; justify-content: center; gap: 8px; padding: 0 32px 20px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 7px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary); font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text-primary); }
+  .filter-btn.active {
+    background: rgba(79,125,245,0.15); border-color: var(--accent-blue);
+    color: var(--accent-blue); font-weight: 600;
+  }
+
+  /* ─── GRAPH CONTAINER ─── */
+  .graph-container {
+    position: relative; width: 100%; height: 70vh; min-height: 500px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .graph-container svg { width: 100%; height: 100%; display: block; }
+
+  /* ─── TOOLTIP ─── */
+  .tooltip {
+    position: fixed; pointer-events: none; opacity: 0;
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px; max-width: 360px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5); backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1000; transition: opacity 0.15s;
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .tooltip-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  .tooltip-name { font-size: 15px; font-weight: 700; }
+  .tooltip-type { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .tooltip-body { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+  .tooltip-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border); gap: 12px; }
+  .tooltip-row:last-child { border: none; }
+  .tooltip-label { color: var(--text-muted); white-space: nowrap; }
+  .tooltip-value { font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-align: right; }
+  .tooltip-tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px;
+    font-weight: 600; margin-top: 8px; margin-right: 4px;
+  }
+
+  /* ─── DETAIL PANEL ─── */
+  .detail-panel {
+    position: fixed; right: -440px; top: 0; width: 440px; height: 100vh;
+    background: var(--bg-card); border-left: 1px solid var(--border);
+    box-shadow: -20px 0 60px rgba(0,0,0,0.4); z-index: 999;
+    transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto; padding: 32px;
+  }
+  .detail-panel.open { right: 0; }
+  .detail-close {
+    position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+    border-radius: 8px; border: 1px solid var(--border); background: transparent;
+    color: var(--text-secondary); cursor: pointer; font-size: 18px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .detail-close:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+  .detail-section { margin-bottom: 24px; }
+  .detail-section h3 { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+  .detail-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .detail-title { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+  .detail-subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+  .detail-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .detail-stat-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px;
+  }
+  .detail-stat-card .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .detail-stat-card .value { font-size: 18px; font-weight: 700; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+  .connection-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; margin-bottom: 8px;
+  }
+  .connection-card .conn-name { font-size: 13px; font-weight: 600; }
+  .connection-card .conn-reason { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+  .ai-vector {
+    background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.15);
+    border-radius: 10px; padding: 14px; margin-bottom: 8px;
+  }
+  .ai-vector .av-title { font-size: 12px; font-weight: 600; color: var(--accent-purple); }
+  .ai-vector .av-desc { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.5; }
+
+  /* ─── LEGEND ─── */
+  .legend {
+    display: flex; justify-content: center; gap: 24px; padding: 20px 32px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend-line { width: 24px; height: 2px; border-radius: 1px; flex-shrink: 0; }
+
+  /* ─── BOTTOM SECTION ─── */
+  .bottom-section { padding: 56px 32px; text-align: center; }
+  .bottom-section h2 {
+    font-size: 28px; font-weight: 800; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bottom-section p { font-size: 14px; color: var(--text-secondary); max-width: 600px; margin: 0 auto 24px; line-height: 1.6; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 32px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    color: white; font-size: 14px; font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif; transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(79,125,245,0.3);
+    text-decoration: none;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,125,245,0.4); }
+
+  .modven-footer {
+    padding: 32px; text-align: center; border-top: 1px solid var(--border);
+  }
+  .modven-footer-inner {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;
+  }
+  .modven-footer-inner a {
+    color: var(--text-muted); text-decoration: none; transition: color 0.2s;
+  }
+  .modven-footer-inner a:hover { color: var(--text-secondary); }
+
+  /* ─── NODE LABELS ─── */
+  .node-label {
+    font-family: 'Inter', sans-serif; font-size: 10px; fill: var(--text-secondary);
+    pointer-events: none; text-anchor: middle;
+  }
+  .node-label-corporate {
+    font-family: 'Inter', sans-serif; font-size: 11px; fill: var(--text-primary);
+    font-weight: 600; pointer-events: none; text-anchor: middle;
+  }
+
+  /* ─── MOBILE RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .modven-header { padding: 12px 16px; }
+    .modven-wordmark { font-size: 14px; }
+    .modven-nav a:not(.modven-nav-cta) { display: none; }
+
+    .hero { padding: 32px 20px 24px; }
+    .hero h1 { font-size: 32px; letter-spacing: -1px; }
+    .hero p { font-size: 14px; margin-bottom: 20px; }
+    .hero-badge { font-size: 10px; padding: 5px 12px; }
+
+    .stats-bar { gap: 16px; padding: 12px 0; }
+    .stat-value { font-size: 22px; }
+    .stat-label { font-size: 9px; }
+
+    .download-bar { gap: 8px; padding: 0 16px 16px; }
+    .download-btn { padding: 8px 14px; font-size: 11px; }
+
+    .filter-bar { gap: 6px; padding: 0 16px 16px; }
+    .filter-btn { padding: 6px 12px; font-size: 11px; }
+
+    .graph-container { height: 55vh; min-height: 380px; }
+
+    .legend { gap: 12px; padding: 16px 20px; }
+    .legend-item { font-size: 10px; }
+
+    .bottom-section { padding: 40px 20px; }
+    .bottom-section h2 { font-size: 22px; }
+    .bottom-section p { font-size: 13px; }
+
+    .detail-panel {
+      width: 100vw; right: -100vw;
+      padding: 24px 20px;
+    }
+    .detail-title { font-size: 20px; }
+
+    .tooltip { max-width: 280px; font-size: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 26px; }
+    .stats-bar { gap: 12px; }
+    .stat-value { font-size: 18px; }
+    .stat { min-width: 60px; }
+    .graph-container { height: 50vh; min-height: 320px; }
+  }
+
+  /* ─── TOUCH HINT ─── */
+  .touch-hint {
+    display: none; text-align: center; padding: 8px;
+    font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .touch-hint { display: block; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MODVEN HEADER -->
+<header class="modven-header">
+  <a href="https://modven.co" class="modven-logo" target="_blank" rel="noopener">
+    <div class="modven-logomark">M</div>
+    <span class="modven-wordmark">Modven</span>
+  </a>
+  <nav class="modven-nav">
+    <a href="https://modven.co" target="_blank" rel="noopener">Home</a>
+    <a href="mailto:justin@modven.co?subject=Re:Launch%20Partnership%20Inquiry" class="modven-nav-cta">Get in Touch</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Modven Research Intelligence</div>
+  <h1>RE:LAUNCH Strategic Map</h1>
+  <p>112 failed startups mapped to their natural corporate partners. Each connection represents a potential acquisition, partnership, or AI-powered rebuild opportunity.</p>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-value">112</div><div class="stat-label">Failed Startups</div></div>
+    <div class="stat"><div class="stat-value">$100B+</div><div class="stat-label">Capital Lost</div></div>
+    <div class="stat"><div class="stat-value">45</div><div class="stat-label">Corporate Partners</div></div>
+    <div class="stat"><div class="stat-value">29</div><div class="stat-label">AI Revival Candidates</div></div>
+    <div class="stat"><div class="stat-value">14</div><div class="stat-label">Sectors</div></div>
+  </div>
+</div>
+
+<!-- DOWNLOADS -->
+<div class="download-bar">
+  <a href="./Re-Launch_Manifesto.docx" class="download-btn" download>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+    Manifesto <span class="file-size">.docx</span>
+  </a>
+  <a href="./Re-Launch_Failed_Startups_Database.xlsx" class="download-btn" download>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+    Database <span class="file-size">.xlsx</span>
+  </a>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-bar" id="filterBar"></div>
+<div class="touch-hint">Pinch to zoom &middot; Drag nodes &middot; Tap for details</div>
+
+<!-- GRAPH -->
+<div class="graph-container" id="graphContainer">
+  <svg id="graphSvg"></svg>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue);box-shadow:0 0 8px var(--glow-blue)"></div> Corporate Partner</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--accent-pink)"></div> Failed Startup (AI Revivable)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div> Failed Startup</div>
+  <div class="legend-item"><div class="legend-line" style="background:linear-gradient(90deg,var(--accent-purple),var(--accent-teal))"></div> Strategic Overlap</div>
+</div>
+
+<!-- CTA -->
+<div class="bottom-section">
+  <h2>Every Connection Is a Deal</h2>
+  <p>These corporates have strategic gaps. These startups mapped the territory. Modven brings the AI execution layer to rebuild what failed — with the right partner at the table from day one.</p>
+  <a href="mailto:justin@modven.co?subject=Re:Launch%20Partnership%20Inquiry" class="cta-btn">Connect with Modven &rarr;</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="modven-footer">
+  <div class="modven-footer-inner">
+    <a href="https://modven.co" target="_blank" rel="noopener">Modven</a>
+    <span>&middot;</span>
+    <span>Re:Launch Fund Thesis</span>
+    <span>&middot;</span>
+    <span>February 2026</span>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip"></div>
+<div class="detail-panel" id="detailPanel">
+  <button class="detail-close" id="detailClose">&times;</button>
+  <div id="detailContent"></div>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const sectorColors = {
+  "Crypto/Web3": "#f59e0b",
+  "Fintech": "#10b981",
+  "HealthTech": "#ec4899",
+  "Autonomous Vehicles": "#8b5cf6",
+  "PropTech": "#f97316",
+  "CleanTech": "#14b8a6",
+  "Food/Delivery": "#ef4444",
+  "Social/Consumer": "#6366f1",
+  "EdTech": "#a855f7",
+  "DTC/E-commerce": "#f43f5e",
+  "Cybersecurity": "#06b6d4",
+  "Space/Frontier": "#818cf8",
+  "Marketplace": "#d946ef",
+  "Logistics": "#22d3ee",
+  "Media": "#fb923c",
+  "LegalTech": "#34d399",
+  "Gaming": "#c084fc"
+};
+
+const corporates = [
+  { id: "c_unitedhealth", name: "UnitedHealth", sector: "HealthTech", type: "corporate", revenue: "$372B" },
+  { id: "c_jpmorgan", name: "JPMorgan", sector: "Fintech", type: "corporate", revenue: "$158B" },
+  { id: "c_stripe", name: "Stripe", sector: "Fintech", type: "corporate", revenue: "$16B" },
+  { id: "c_google", name: "Google", sector: "Social/Consumer", type: "corporate", revenue: "$340B" },
+  { id: "c_amazon", name: "Amazon", sector: "Logistics", type: "corporate", revenue: "$575B" },
+  { id: "c_ford", name: "Ford", sector: "Autonomous Vehicles", type: "corporate", revenue: "$176B" },
+  { id: "c_microsoft", name: "Microsoft", sector: "HealthTech", type: "corporate", revenue: "$245B" },
+  { id: "c_uber", name: "Uber", sector: "Food/Delivery", type: "corporate", revenue: "$40B" },
+  { id: "c_salesforce", name: "Salesforce", sector: "Fintech", type: "corporate", revenue: "$35B" },
+  { id: "c_oracle", name: "Oracle Health", sector: "HealthTech", type: "corporate", revenue: "$53B" },
+  { id: "c_waymo", name: "Waymo", sector: "Autonomous Vehicles", type: "corporate", revenue: "N/A" },
+  { id: "c_tesla", name: "Tesla", sector: "CleanTech", type: "corporate", revenue: "$96B" },
+  { id: "c_catl", name: "CATL", sector: "CleanTech", type: "corporate", revenue: "$60B" },
+  { id: "c_shopify", name: "Shopify", sector: "Fintech", type: "corporate", revenue: "$8B" },
+  { id: "c_doordash", name: "DoorDash", sector: "Food/Delivery", type: "corporate", revenue: "$9B" },
+  { id: "c_cbre", name: "CBRE Group", sector: "PropTech", type: "corporate", revenue: "$33B" },
+  { id: "c_meta", name: "Meta", sector: "Social/Consumer", type: "corporate", revenue: "$160B" },
+  { id: "c_apple", name: "Apple", sector: "DTC/E-commerce", type: "corporate", revenue: "$383B" },
+  { id: "c_zoom", name: "Zoom", sector: "Social/Consumer", type: "corporate", revenue: "$4.5B" },
+  { id: "c_spacex", name: "SpaceX", sector: "Space/Frontier", type: "corporate", revenue: "$13B" },
+  { id: "c_deere", name: "John Deere", sector: "CleanTech", type: "corporate", revenue: "$60B" },
+  { id: "c_flexport", name: "Flexport", sector: "Logistics", type: "corporate", revenue: "$3B" },
+  { id: "c_prologis", name: "Prologis", sector: "PropTech", type: "corporate", revenue: "$8B" },
+  { id: "c_crowdstrike", name: "CrowdStrike", sector: "Cybersecurity", type: "corporate", revenue: "$3.5B" },
+  { id: "c_coursera", name: "Coursera", sector: "EdTech", type: "corporate", revenue: "$700M" },
+  { id: "c_waystar", name: "Waystar", sector: "HealthTech", type: "corporate", revenue: "$800M" },
+  { id: "c_sunrun", name: "Sunrun", sector: "CleanTech", type: "corporate", revenue: "$2B" },
+  { id: "c_carvana", name: "Carvana", sector: "Marketplace", type: "corporate", revenue: "$13B" },
+  { id: "c_spotify", name: "Spotify", sector: "Social/Consumer", type: "corporate", revenue: "$16B" },
+  { id: "c_coinbase", name: "Coinbase", sector: "Crypto/Web3", type: "corporate", revenue: "$6B" },
+  { id: "c_toast", name: "Toast", sector: "Food/Delivery", type: "corporate", revenue: "$4B" },
+  { id: "c_nvidia", name: "NVIDIA", sector: "Autonomous Vehicles", type: "corporate", revenue: "$130B" },
+  { id: "c_elevance", name: "Elevance Health", sector: "HealthTech", type: "corporate", revenue: "$171B" },
+  { id: "c_thomsonreuters", name: "Thomson Reuters", sector: "LegalTech", type: "corporate", revenue: "$7B" },
+  { id: "c_nike", name: "Nike", sector: "DTC/E-commerce", type: "corporate", revenue: "$51B" },
+  { id: "c_lvmh", name: "LVMH", sector: "DTC/E-commerce", type: "corporate", revenue: "$92B" },
+  { id: "c_wework2", name: "IWG/Regus", sector: "PropTech", type: "corporate", revenue: "$4B" },
+  { id: "c_siemens", name: "Siemens", sector: "CleanTech", type: "corporate", revenue: "$80B" },
+  { id: "c_nextera", name: "NextEra Energy", sector: "CleanTech", type: "corporate", revenue: "$28B" },
+  { id: "c_kroger", name: "Kroger", sector: "Food/Delivery", type: "corporate", revenue: "$150B" },
+  { id: "c_walmart", name: "Walmart", sector: "Logistics", type: "corporate", revenue: "$648B" },
+  { id: "c_volkswagen", name: "Volkswagen", sector: "Autonomous Vehicles", type: "corporate", revenue: "$295B" },
+  { id: "c_chargepoint", name: "ChargePoint", sector: "CleanTech", type: "corporate", revenue: "$500M" },
+  { id: "c_teladoc", name: "Teladoc", sector: "HealthTech", type: "corporate", revenue: "$2.6B" },
+  { id: "c_ringcentral", name: "RingCentral", sector: "Social/Consumer", type: "corporate", revenue: "$2.3B" },
+];
+
+const startups = [
+  { id: "s_olive", name: "Olive AI", sector: "HealthTech", funding: "$902M", problem: "Healthcare admin automation (prior auth, claims)", aiRevivable: true, viability: 9,
+    aiVectors: ["Modern LLMs genuinely automate prior auth and claims — the tech Olive faked now exists", "Multi-agent AI for workflow orchestration", "Fine-tuned models on billing codes achieve 95%+ accuracy"] },
+  { id: "s_fast", name: "Fast", sector: "Fintech", funding: "$124.5M", problem: "Universal one-click checkout", aiRevivable: true, viability: 8,
+    aiVectors: ["LLM-powered dynamic checkout adapts to each merchant", "AI A/B testing optimizes conversion funnels autonomously", "Behavioral biometrics for fraud detection"] },
+  { id: "s_convoy", name: "Convoy", sector: "Logistics", funding: "$800M+", problem: "Digital freight matching platform", aiRevivable: true, viability: 8,
+    aiVectors: ["AI demand forecasting predicts freight recessions", "Game-theoretic dynamic pricing for broker-shipper negotiations", "Fleet optimization reducing empty miles by 30-40%"] },
+  { id: "s_argo", name: "Argo AI", sector: "Autonomous Vehicles", funding: "$2.6B", problem: "Level 4 self-driving for Ford/VW", aiRevivable: true, viability: 6,
+    aiVectors: ["Foundation models for driving reduce L4 engineering cost", "Generative AI synthetic data for billions of training scenarios", "Multimodal AI sensor fusion for edge cases"] },
+  { id: "s_babylon", name: "Babylon Health", sector: "HealthTech", funding: "$1.2B+", problem: "AI-first telehealth and virtual primary care", aiRevivable: true, viability: 8,
+    aiVectors: ["Multimodal AI diagnostics dramatically better than 2020 chatbots", "AI triage routing reduces cost per encounter 60%+", "Automated clinical documentation solves provider productivity"] },
+  { id: "s_wework", name: "WeWork", sector: "PropTech", funding: "$22B+", problem: "Flexible coworking office space", aiRevivable: true, viability: 5,
+    aiVectors: ["AI demand prediction prevents over-expansion", "Dynamic pricing via game theory", "AI space design maximizes revenue per sq ft"] },
+  { id: "s_northvolt", name: "Northvolt", sector: "CleanTech", funding: "$13.8B", problem: "European battery cell manufacturing", aiRevivable: true, viability: 8,
+    aiVectors: ["AI process control for battery manufacturing", "Digital twin simulation of production lines", "AI materials science acceleration"] },
+  { id: "s_veev", name: "Veev", sector: "PropTech", funding: "$600M", problem: "Prefab panelized home construction", aiRevivable: true, viability: 7,
+    aiVectors: ["AI design-for-manufacturing optimizes panel layouts", "Computer vision QA on factory floors", "Generative AI for code/permit compliance"] },
+  { id: "s_hopin", name: "Hopin", sector: "Social/Consumer", funding: "$1B+", problem: "Virtual event platform for conferences", aiRevivable: true, viability: 7,
+    aiVectors: ["AI networking matches attendees by intent signals", "Generative AI content from event recordings", "AI event intelligence proving ROI to sponsors"] },
+  { id: "s_bird", name: "Bird", sector: "Autonomous Vehicles", funding: "$800M+", problem: "Electric scooter sharing", aiRevivable: true, viability: 6,
+    aiVectors: ["AI fleet management predicts demand hotspots", "Predictive maintenance extends scooter lifespan 6x", "Reinforcement learning dynamic pricing"] },
+  { id: "s_infarm", name: "Infarm", sector: "CleanTech", funding: "$500M+", problem: "Modular vertical farming in grocery stores", aiRevivable: true, viability: 7,
+    aiVectors: ["AI climate control reduces energy 30-50%", "Computer vision crop monitoring detects issues early", "Yield prediction optimizes planting schedules"] },
+  { id: "s_pear", name: "Pear Therapeutics", sector: "HealthTech", funding: "$400M+", problem: "FDA-approved prescription digital therapeutics", aiRevivable: true, viability: 7,
+    aiVectors: ["AI proves clinical efficacy with faster trials", "LLM patient engagement improves adherence", "AI payer negotiation tools"] },
+  { id: "s_clubhouse", name: "Clubhouse", sector: "Social/Consumer", funding: "$300M+", problem: "Live audio conversation rooms", aiRevivable: true, viability: 6,
+    aiVectors: ["AI topic discovery solves cold start problem", "Real-time transcription and translation", "AI creator tools for clips and show notes"] },
+  { id: "s_tally", name: "Tally", sector: "Fintech", funding: "$172M", problem: "Automated credit card debt management", aiRevivable: true, viability: 7,
+    aiVectors: ["AI-driven customer LTV prediction", "Automated financial coaching via LLM", "Predictive default modeling"] },
+  { id: "s_cazoo", name: "Cazoo", sector: "Marketplace", funding: "$2B+", problem: "Online used car marketplace (European Carvana)", aiRevivable: true, viability: 7,
+    aiVectors: ["AI pricing engine for optimal spreads", "Computer vision vehicle inspection", "AI logistics optimization"] },
+  { id: "s_donotpay", name: "DoNotPay", sector: "LegalTech", funding: "$23M+", problem: "AI robot lawyer for legal disputes", aiRevivable: true, viability: 8,
+    aiVectors: ["Reasoning-capable LLMs dramatically improve legal accuracy", "RAG grounded in actual case law", "Human-in-loop drafting with attorney review"] },
+  { id: "s_byjus", name: "BYJU'S", sector: "EdTech", funding: "$5.7B", problem: "K-12 online learning platform", aiRevivable: true, viability: 7,
+    aiVectors: ["AI adaptive learning personalizes education genuinely", "Engagement prediction intervenes before dropout", "Automated assessment proves outcomes to parents"] },
+  { id: "s_sunpower", name: "SunPower", sector: "CleanTech", funding: "$3B+", problem: "Residential solar installation and financing", aiRevivable: true, viability: 7,
+    aiVectors: ["AI identifies highest-ROI households via satellite imagery", "Automated solar design in minutes", "Policy risk prediction analytics"] },
+  { id: "s_mindstrong", name: "Mindstrong", sector: "HealthTech", funding: "$160M+", problem: "Smartphone-based mental health monitoring", aiRevivable: true, viability: 7,
+    aiVectors: ["On-device AI with better privacy architecture", "LLM therapeutic interventions complement monitoring", "Federated learning across populations"] },
+  { id: "s_messenger", name: "The Messenger", sector: "Media", funding: "$50M+", problem: "Centrist digital news platform", aiRevivable: true, viability: 6,
+    aiVectors: ["AI personalization matches content to reader intent", "LLM-assisted journalism: 5 writers produce output of 50", "AI ad optimization maximizes yield from day one"] },
+  { id: "s_hyperloop", name: "Hyperloop One", sector: "Space/Frontier", funding: "$450M+", problem: "Vacuum tube high-speed transit", aiRevivable: true, viability: 3,
+    aiVectors: ["AI simulation identifies viable route economics", "Generative design reduces infrastructure cost", "AI regulatory modeling for new transit modes"] },
+  { id: "s_allbirds", name: "Allbirds", sector: "DTC/E-commerce", funding: "$200M+", problem: "Sustainable wool sneakers DTC", aiRevivable: true, viability: 5,
+    aiVectors: ["AI customer LTV prediction optimizes acquisition", "Supply chain demand forecasting at SKU level", "Generative AI product design from preference data"] },
+  { id: "s_nuro", name: "Nuro", sector: "Autonomous Vehicles", funding: "$2.1B+", problem: "Autonomous delivery robots", aiRevivable: true, viability: 6,
+    aiVectors: ["Foundation models reduce perception stack cost 70%+", "AI route optimization per charge cycle", "Generative AI simulated training at scale"] },
+  { id: "s_ironnet", name: "IronNet", sector: "Cybersecurity", funding: "$400M+", problem: "Collective defense network detection", aiRevivable: true, viability: 7,
+    aiVectors: ["LLM-powered threat intelligence analysis", "AI behavioral anomaly detection", "Automated incident response playbooks"] },
+  { id: "s_virginorbit", name: "Virgin Orbit", sector: "Space/Frontier", funding: "$1B+", problem: "Air-launched small satellite rockets", aiRevivable: true, viability: 4,
+    aiVectors: ["AI mission planning and trajectory optimization", "Predictive maintenance for rocket engines", "AI supply chain optimization for manufacturing"] },
+  { id: "s_synapse", name: "Synapse", sector: "Fintech", funding: "$50M+", problem: "Banking-as-a-Service API platform", aiRevivable: true, viability: 7,
+    aiVectors: ["AI compliance monitoring at fraction of cost", "Automated KYC/AML using LLMs", "Real-time risk scoring for partner banks"] },
+  { id: "s_enjoy", name: "Enjoy Tech", sector: "DTC/E-commerce", funding: "$450M+", problem: "At-home mobile retail and product setup", aiRevivable: true, viability: 5,
+    aiVectors: ["AI scheduling optimizes technician visits", "AR/AI remote setup replaces in-person visits", "Customer LTV modeling for premium service targeting"] },
+  { id: "s_easyknock", name: "EasyKnock", sector: "PropTech", funding: "$455M", problem: "Residential sale-leaseback", aiRevivable: true, viability: 6,
+    aiVectors: ["AI underwriting for accurate home valuation", "NLP regulatory compliance monitoring", "AI consumer risk scoring"] },
+  { id: "s_vroom", name: "Vroom", sector: "Marketplace", funding: "$1.2B+", problem: "Online used car retailer", aiRevivable: true, viability: 6,
+    aiVectors: ["AI vehicle condition assessment from photos", "Logistics optimization batching transport", "ML pricing models in real-time"] },
+];
+
+const links = [
+  { source: "s_olive", target: "c_unitedhealth", reason: "UnitedHealth processes billions in claims; Olive's automation IP directly applicable" },
+  { source: "s_olive", target: "c_waystar", reason: "Waystar already acquired Olive's clearinghouse; deeper integration opportunity" },
+  { source: "s_olive", target: "c_elevance", reason: "Elevance's claims volume would benefit from AI automation" },
+  { source: "s_olive", target: "c_oracle", reason: "Oracle Health (Cerner) needs admin automation for hospital EHR workflows" },
+  { source: "s_fast", target: "c_stripe", reason: "Stripe invested $102M in Fast; checkout optimization is core to Stripe's roadmap" },
+  { source: "s_fast", target: "c_shopify", reason: "Shopify checkout still has friction; Fast's vision fits Shopify's merchant ecosystem" },
+  { source: "s_convoy", target: "c_amazon", reason: "Amazon Freight is growing; Convoy's shipper network and matching IP valuable" },
+  { source: "s_convoy", target: "c_flexport", reason: "Flexport expanding into domestic freight; Convoy's tech accelerates this" },
+  { source: "s_convoy", target: "c_walmart", reason: "Walmart's logistics network could absorb Convoy's matching algorithms" },
+  { source: "s_argo", target: "c_ford", reason: "Ford invested $2.6B in Argo; still needs L4 tech for commercial deployment" },
+  { source: "s_argo", target: "c_volkswagen", reason: "VW co-invested in Argo; autonomous driving still a strategic priority" },
+  { source: "s_argo", target: "c_waymo", reason: "Waymo could absorb Argo's talent and simulation IP" },
+  { source: "s_argo", target: "c_nvidia", reason: "NVIDIA's DRIVE platform would benefit from Argo's real-world driving data" },
+  { source: "s_babylon", target: "c_teladoc", reason: "Teladoc is the largest telehealth platform; Babylon's AI triage IP fills capability gap" },
+  { source: "s_babylon", target: "c_microsoft", reason: "Microsoft Health Cloud + Babylon's AI diagnostics = enterprise telehealth play" },
+  { source: "s_babylon", target: "c_elevance", reason: "Elevance's 47M members need virtual care; Babylon's AI reduces cost per encounter" },
+  { source: "s_wework", target: "c_cbre", reason: "CBRE manages flexible workspace; WeWork's occupancy data and brand still valuable" },
+  { source: "s_wework", target: "c_prologis", reason: "Prologis expanding into flexible commercial space; WeWork's location playbook relevant" },
+  { source: "s_wework", target: "c_wework2", reason: "IWG/Regus is the surviving competitor; WeWork's premium locations complement their portfolio" },
+  { source: "s_northvolt", target: "c_tesla", reason: "Tesla needs diverse battery supply; Northvolt's European IP and factory infrastructure" },
+  { source: "s_northvolt", target: "c_catl", reason: "CATL expanding in Europe; Northvolt's facilities and talent pool accelerate entry" },
+  { source: "s_northvolt", target: "c_volkswagen", reason: "VW invested heavily in Northvolt; still needs European battery supply chain" },
+  { source: "s_northvolt", target: "c_siemens", reason: "Siemens' industrial automation + Northvolt's battery manufacturing IP" },
+  { source: "s_veev", target: "c_cbre", reason: "CBRE's construction services division could use Veev's prefab technology" },
+  { source: "s_hopin", target: "c_zoom", reason: "Zoom needs event capabilities beyond meetings; Hopin's platform IP fills the gap" },
+  { source: "s_hopin", target: "c_ringcentral", reason: "RingCentral acquired parts of Hopin; deeper integration opportunity exists" },
+  { source: "s_hopin", target: "c_salesforce", reason: "Salesforce Events/Dreamforce platform could absorb Hopin's networking tech" },
+  { source: "s_bird", target: "c_uber", reason: "Uber's multimodal transport strategy; micromobility is a natural extension" },
+  { source: "s_infarm", target: "c_kroger", reason: "Kroger partnered with Kitchen United; in-store farming aligns with fresh produce strategy" },
+  { source: "s_infarm", target: "c_walmart", reason: "Walmart's push for local/fresh produce; vertical farming in or near stores" },
+  { source: "s_pear", target: "c_unitedhealth", reason: "UnitedHealth's Optum behavioral health division needs digital therapeutics" },
+  { source: "s_pear", target: "c_teladoc", reason: "Teladoc's BetterHelp + prescription DTx = comprehensive mental health platform" },
+  { source: "s_clubhouse", target: "c_spotify", reason: "Spotify already invested in live audio (Greenroom); Clubhouse's community IP valuable" },
+  { source: "s_clubhouse", target: "c_meta", reason: "Meta's social audio ambitions (failed Live Audio Rooms); Clubhouse's creator network" },
+  { source: "s_tally", target: "c_jpmorgan", reason: "JPMorgan's consumer banking (Chase) could offer AI debt management as a feature" },
+  { source: "s_tally", target: "c_salesforce", reason: "Salesforce Financial Services Cloud + automated debt optimization" },
+  { source: "s_cazoo", target: "c_carvana", reason: "Carvana survived the same model; Cazoo's European operations and data valuable for expansion" },
+  { source: "s_donotpay", target: "c_thomsonreuters", reason: "Thomson Reuters' Westlaw + AI legal assistant = access to justice at scale" },
+  { source: "s_byjus", target: "c_coursera", reason: "Coursera expanding into K-12; BYJU's content library and Indian market data" },
+  { source: "s_byjus", target: "c_google", reason: "Google's education tools (Classroom) + AI-adaptive learning = massive play" },
+  { source: "s_sunpower", target: "c_sunrun", reason: "Sunrun is the surviving residential solar leader; SunPower's IP and customer base" },
+  { source: "s_sunpower", target: "c_nextera", reason: "NextEra's distributed solar ambitions; SunPower's residential installation network" },
+  { source: "s_sunpower", target: "c_tesla", reason: "Tesla Solar/Powerwall + SunPower's installation expertise" },
+  { source: "s_mindstrong", target: "c_teladoc", reason: "BetterHelp + passive mental health monitoring = early intervention platform" },
+  { source: "s_mindstrong", target: "c_apple", reason: "Apple Health's mental wellness features; Mindstrong's smartphone biomarker IP" },
+  { source: "s_messenger", target: "c_google", reason: "Google News initiative; AI-powered personalized news at scale" },
+  { source: "s_allbirds", target: "c_nike", reason: "Nike's sustainable materials R&D; Allbirds' wool/tree fiber IP and brand equity" },
+  { source: "s_allbirds", target: "c_lvmh", reason: "LVMH acquiring sustainable brands; Allbirds' eco-premium positioning" },
+  { source: "s_nuro", target: "c_uber", reason: "Uber's autonomous delivery strategy; Nuro's robot fleet and operational learnings" },
+  { source: "s_nuro", target: "c_amazon", reason: "Amazon's last-mile delivery costs; Nuro's autonomous delivery IP" },
+  { source: "s_ironnet", target: "c_crowdstrike", reason: "CrowdStrike's endpoint + IronNet's network detection = full-spectrum defense" },
+  { source: "s_virginorbit", target: "c_spacex", reason: "SpaceX's rideshare missions; Virgin Orbit's air-launch IP for niche orbits" },
+  { source: "s_synapse", target: "c_jpmorgan", reason: "JPMorgan's embedded finance ambitions; Synapse's BaaS infrastructure" },
+  { source: "s_synapse", target: "c_stripe", reason: "Stripe Treasury expanding; Synapse's banking API layer complementary" },
+  { source: "s_enjoy", target: "c_apple", reason: "Apple was Enjoy's biggest client; premium at-home setup still strategically valuable" },
+  { source: "s_easyknock", target: "c_jpmorgan", reason: "JPMorgan Home Lending; sale-leaseback as a new product line" },
+  { source: "s_vroom", target: "c_carvana", reason: "Carvana could absorb Vroom's reconditioning IP and customer data" },
+];
+
+// ============================================================
+// BUILD GRAPH
+// ============================================================
+const allNodes = [
+  ...corporates.map(c => ({ ...c, type: "corporate", radius: 18 })),
+  ...startups.map(s => ({ ...s, type: "startup", radius: s.viability ? 8 + s.viability * 0.8 : 10 }))
+];
+
+const allLinks = links.map(l => ({ ...l }));
+const sectors = [...new Set([...corporates.map(c => c.sector), ...startups.map(s => s.sector)])].sort();
+
+const container = document.getElementById('graphContainer');
+const svg = d3.select('#graphSvg');
+let width = container.clientWidth;
+let height = container.clientHeight;
+
+// Detect mobile
+const isMobile = window.innerWidth <= 768;
+
+// Filters
+const filterBar = document.getElementById('filterBar');
+let activeFilter = 'all';
+
+const allBtn = document.createElement('button');
+allBtn.className = 'filter-btn active';
+allBtn.textContent = 'All Sectors';
+allBtn.addEventListener('click', function() { setFilter('all', this); });
+filterBar.appendChild(allBtn);
+
+sectors.forEach(s => {
+  const btn = document.createElement('button');
+  btn.className = 'filter-btn';
+  btn.textContent = s;
+  btn.style.borderColor = sectorColors[s] || '#555';
+  btn.addEventListener('click', function() { setFilter(s, this); });
+  filterBar.appendChild(btn);
+});
+
+function setFilter(sector, btn) {
+  activeFilter = sector;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateVisibility();
+}
+
+// SVG setup
+const defs = svg.append('defs');
+
+// Glow filter
+const glow = defs.append('filter').attr('id', 'glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+glow.append('feGaussianBlur').attr('stdDeviation', '4').attr('result', 'coloredBlur');
+const glowMerge = glow.append('feMerge');
+glowMerge.append('feMergeNode').attr('in', 'coloredBlur');
+glowMerge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+// Gradient for links
+const linkGrad = defs.append('linearGradient').attr('id', 'linkGrad').attr('gradientUnits', 'userSpaceOnUse');
+linkGrad.append('stop').attr('offset', '0%').attr('stop-color', '#8b5cf6').attr('stop-opacity', 0.4);
+linkGrad.append('stop').attr('offset', '100%').attr('stop-color', '#14b8a6').attr('stop-opacity', 0.4);
+
+const g = svg.append('g');
+
+// Zoom (adjust for mobile)
+const zoom = d3.zoom()
+  .scaleExtent([0.2, 5])
+  .on('zoom', (e) => g.attr('transform', e.transform));
+svg.call(zoom);
+
+// Simulation (tuned for viewport)
+const chargeStrength = isMobile ? -80 : -150;
+const corpCharge = isMobile ? -300 : -500;
+const linkDist = isMobile ? 90 : 140;
+
+const simulation = d3.forceSimulation(allNodes)
+  .force('link', d3.forceLink(allLinks).id(d => d.id).distance(linkDist).strength(0.3))
+  .force('charge', d3.forceManyBody().strength(d => d.type === 'corporate' ? corpCharge : chargeStrength))
+  .force('center', d3.forceCenter(width / 2, height / 2))
+  .force('collision', d3.forceCollide().radius(d => d.radius + (isMobile ? 4 : 8)))
+  .force('x', d3.forceX(width / 2).strength(0.03))
+  .force('y', d3.forceY(height / 2).strength(0.03));
+
+// Links
+const link = g.append('g').selectAll('line').data(allLinks).join('line')
+  .attr('stroke', 'url(#linkGrad)').attr('stroke-width', 1.5).attr('opacity', 0.3);
+
+// Nodes
+const node = g.append('g').selectAll('g').data(allNodes).join('g')
+  .call(d3.drag().on('start', dragStart).on('drag', dragged).on('end', dragEnd));
+
+// Corporate nodes
+node.filter(d => d.type === 'corporate')
+  .append('circle')
+  .attr('r', d => isMobile ? d.radius * 0.8 : d.radius)
+  .attr('fill', d => sectorColors[d.sector] || '#4f7df5')
+  .attr('stroke', d => sectorColors[d.sector] || '#4f7df5')
+  .attr('stroke-width', 2)
+  .attr('stroke-opacity', 0.4)
+  .attr('filter', 'url(#glow)')
+  .attr('opacity', 0.9);
+
+// Startup nodes
+node.filter(d => d.type === 'startup')
+  .append('circle')
+  .attr('r', d => isMobile ? d.radius * 0.75 : d.radius)
+  .attr('fill', d => d.aiRevivable ? (sectorColors[d.sector] || '#ec4899') : '#555770')
+  .attr('opacity', d => d.aiRevivable ? 0.7 : 0.4)
+  .attr('stroke', d => d.aiRevivable ? (sectorColors[d.sector] || '#ec4899') : '#555770')
+  .attr('stroke-width', 1)
+  .attr('stroke-opacity', 0.3);
+
+// Labels
+node.filter(d => d.type === 'corporate')
+  .append('text')
+  .attr('class', 'node-label-corporate')
+  .attr('dy', d => (isMobile ? d.radius * 0.8 : d.radius) + 14)
+  .style('font-size', isMobile ? '9px' : '11px')
+  .text(d => d.name);
+
+node.filter(d => d.type === 'startup')
+  .append('text')
+  .attr('class', 'node-label')
+  .attr('dy', d => (isMobile ? d.radius * 0.75 : d.radius) + 12)
+  .style('font-size', isMobile ? '8px' : '10px')
+  .text(d => d.name);
+
+// Tooltip
+const tooltip = document.getElementById('tooltip');
+
+node.on('mouseover', function(event, d) {
+  if (isMobile) return; // skip hover on touch
+  showTooltip(event, d);
+  highlightConnections(d);
+})
+.on('mousemove', function(event) {
+  if (isMobile) return;
+  tooltip.style.left = Math.min(event.clientX + 16, window.innerWidth - 380) + 'px';
+  tooltip.style.top = Math.min(event.clientY - 10, window.innerHeight - 300) + 'px';
+})
+.on('mouseout', function() {
+  if (isMobile) return;
+  tooltip.classList.remove('visible');
+  resetHighlight();
+})
+.on('click', function(event, d) {
+  if (isMobile) {
+    highlightConnections(d);
+    setTimeout(() => resetHighlight(), 3000);
+  }
+  showDetail(d);
+});
+
+function showTooltip(event, d) {
+  const t = tooltip;
+  if (d.type === 'corporate') {
+    t.innerHTML = `
+      <div class="tooltip-header">
+        <div class="tooltip-icon" style="background:${sectorColors[d.sector]||'#4f7df5'}20;color:${sectorColors[d.sector]||'#4f7df5'}">${d.name[0]}</div>
+        <div><div class="tooltip-name">${d.name}</div><div class="tooltip-type">Corporate Partner</div></div>
+      </div>
+      <div class="tooltip-body">
+        <div class="tooltip-row"><span class="tooltip-label">Sector</span><span class="tooltip-value">${d.sector}</span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Revenue</span><span class="tooltip-value">${d.revenue}</span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Connections</span><span class="tooltip-value">${allLinks.filter(l=>(l.target.id||l.target)===d.id||(l.source.id||l.source)===d.id).length} startups</span></div>
+      </div>`;
+  } else {
+    t.innerHTML = `
+      <div class="tooltip-header">
+        <div class="tooltip-icon" style="background:${d.aiRevivable?'#8b5cf620':'#55577020'};color:${d.aiRevivable?'#8b5cf6':'#555770'}">R</div>
+        <div><div class="tooltip-name">${d.name}</div><div class="tooltip-type">Failed Startup ${d.aiRevivable?'• AI Revivable':''}</div></div>
+      </div>
+      <div class="tooltip-body">
+        <div class="tooltip-row"><span class="tooltip-label">Funding</span><span class="tooltip-value">${d.funding}</span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Sector</span><span class="tooltip-value">${d.sector}</span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Problem</span><span class="tooltip-value" style="font-family:Inter;font-weight:400">${d.problem}</span></div>
+        ${d.viability?`<div class="tooltip-row"><span class="tooltip-label">Revival Score</span><span class="tooltip-value" style="color:${d.viability>=8?'#10b981':d.viability>=6?'#f59e0b':'#ef4444'}">${d.viability}/10</span></div>`:''}
+      </div>
+      <span class="tooltip-tag" style="background:${sectorColors[d.sector]||'#555'}20;color:${sectorColors[d.sector]||'#555'}">${d.sector}</span>
+      ${d.aiRevivable?'<span class="tooltip-tag" style="background:#8b5cf620;color:#8b5cf6">AI Revivable</span>':''}`;
+  }
+  t.classList.add('visible');
+  t.style.left = Math.min(event.clientX + 16, window.innerWidth - 380) + 'px';
+  t.style.top = Math.min(event.clientY - 10, window.innerHeight - 300) + 'px';
+}
+
+function highlightConnections(d) {
+  const connected = new Set();
+  allLinks.forEach(l => {
+    const sid = l.source.id || l.source;
+    const tid = l.target.id || l.target;
+    if (sid === d.id) connected.add(tid);
+    if (tid === d.id) connected.add(sid);
+  });
+  node.attr('opacity', n => n.id === d.id || connected.has(n.id) ? 1 : 0.15);
+  link.attr('opacity', l => {
+    const sid = l.source.id || l.source;
+    const tid = l.target.id || l.target;
+    return sid === d.id || tid === d.id ? 0.8 : 0.05;
+  }).attr('stroke-width', l => {
+    const sid = l.source.id || l.source;
+    const tid = l.target.id || l.target;
+    return sid === d.id || tid === d.id ? 3 : 1.5;
+  });
+}
+
+function resetHighlight() {
+  node.attr('opacity', 1);
+  link.attr('opacity', 0.3).attr('stroke-width', 1.5);
+}
+
+// Detail panel
+function showDetail(d) {
+  const panel = document.getElementById('detailPanel');
+  const content = document.getElementById('detailContent');
+  const connections = allLinks.filter(l => {
+    const sid = l.source.id || l.source;
+    const tid = l.target.id || l.target;
+    return sid === d.id || tid === d.id;
+  });
+
+  if (d.type === 'corporate') {
+    const connectedStartups = connections.map(l => {
+      const otherId = (l.source.id || l.source) === d.id ? (l.target.id || l.target) : (l.source.id || l.source);
+      const other = allNodes.find(n => n.id === otherId);
+      return { ...other, reason: l.reason };
+    });
+    content.innerHTML = `
+      <div style="color:${sectorColors[d.sector]||'#4f7df5'};font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">Corporate Partner</div>
+      <div class="detail-title">${d.name}</div>
+      <div class="detail-subtitle">${d.sector} &middot; Revenue: ${d.revenue}</div>
+      <div class="detail-section">
+        <div class="detail-stat-grid">
+          <div class="detail-stat-card"><div class="label">Connections</div><div class="value">${connections.length}</div></div>
+          <div class="detail-stat-card"><div class="label">Sector</div><div class="value" style="font-size:14px;font-family:Inter">${d.sector}</div></div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <h3>Connected Startups</h3>
+        ${connectedStartups.map(s => `
+          <div class="connection-card">
+            <div class="conn-name" style="color:${sectorColors[s.sector]||'#ec4899'}">${s.name} <span style="color:var(--text-muted);font-weight:400;font-size:11px">${s.funding||''}</span></div>
+            <div class="conn-reason">${s.reason}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  } else {
+    const connectedCorps = connections.map(l => {
+      const otherId = (l.source.id || l.source) === d.id ? (l.target.id || l.target) : (l.source.id || l.source);
+      const other = allNodes.find(n => n.id === otherId);
+      return { ...other, reason: l.reason };
+    });
+    content.innerHTML = `
+      <div style="color:${d.aiRevivable?'#8b5cf6':'#555770'};font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px">${d.aiRevivable?'AI Revival Candidate':'Failed Startup'}</div>
+      <div class="detail-title">${d.name}</div>
+      <div class="detail-subtitle">${d.sector} &middot; ${d.funding}</div>
+      <div class="detail-section">
+        <div class="detail-stat-grid">
+          <div class="detail-stat-card"><div class="label">Funding Raised</div><div class="value" style="font-size:16px">${d.funding}</div></div>
+          <div class="detail-stat-card"><div class="label">Revival Score</div><div class="value" style="color:${d.viability>=8?'#10b981':d.viability>=6?'#f59e0b':'#ef4444'}">${d.viability||'N/A'}/10</div></div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <h3>Problem</h3>
+        <p>${d.problem}</p>
+      </div>
+      ${d.aiVectors ? `
+      <div class="detail-section">
+        <h3>AI Revival Vectors</h3>
+        ${d.aiVectors.map((v,i) => `
+          <div class="ai-vector">
+            <div class="av-title">Vector ${i+1}</div>
+            <div class="av-desc">${v}</div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+      <div class="detail-section">
+        <h3>Strategic Partners</h3>
+        ${connectedCorps.map(c => `
+          <div class="connection-card">
+            <div class="conn-name" style="color:${sectorColors[c.sector]||'#4f7df5'}">${c.name} <span style="color:var(--text-muted);font-weight:400;font-size:11px">${c.revenue||''}</span></div>
+            <div class="conn-reason">${c.reason}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+  panel.classList.add('open');
+}
+
+document.getElementById('detailClose').onclick = () => document.getElementById('detailPanel').classList.remove('open');
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('detailPanel').classList.remove('open'); });
+
+// Close detail panel on outside click (mobile)
+if (isMobile) {
+  svg.on('click', function(event) {
+    if (event.target === this || event.target.tagName === 'svg') {
+      document.getElementById('detailPanel').classList.remove('open');
+    }
+  });
+}
+
+function updateVisibility() {
+  if (activeFilter === 'all') {
+    node.attr('display', null);
+    link.attr('display', null);
+  } else {
+    node.attr('display', d => d.sector === activeFilter ? null : 'none');
+    link.attr('display', l => {
+      const s = l.source; const t = l.target;
+      return s.sector === activeFilter || t.sector === activeFilter ? null : 'none';
+    });
+  }
+  simulation.alpha(0.3).restart();
+}
+
+simulation.on('tick', () => {
+  link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+    .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+  node.attr('transform', d => `translate(${d.x},${d.y})`);
+});
+
+function dragStart(event, d) { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; }
+function dragged(event, d) { d.fx = event.x; d.fy = event.y; }
+function dragEnd(event, d) { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; }
+
+// Initial zoom to fit
+setTimeout(() => {
+  const scale = isMobile ? 0.65 : 0.85;
+  svg.transition().duration(1000).call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(scale));
+}, 500);
+
+// Resize handler
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    width = container.clientWidth;
+    height = container.clientHeight;
+    simulation.force('center', d3.forceCenter(width / 2, height / 2));
+    simulation.alpha(0.1).restart();
+  }, 150);
+});
+</script>
+</body>
+</html>
